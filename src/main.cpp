@@ -8,6 +8,7 @@
 #include <QVector>
 #include <QString>
 #include <QVBoxLayout>
+#include <QDebug>
 
 // Processing includes
 #include <usb.h>
