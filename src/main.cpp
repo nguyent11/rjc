@@ -5,11 +5,12 @@
 #include <QAction>
 #include <QMenuBar>
 #include <QStatusBar>
+#include <QVector>
+#include <QString>
+#include <QVBoxLayout>
 
 // Processing includes
 #include <usb.h>
-#include <stdio.h>
-#include <vector>
 
 class MainWindow : public QMainWindow {
     public:
@@ -23,7 +24,7 @@ class MainWindow : public QMainWindow {
         // Create a central widget (optional, can use for main content)
         //QPushButton *button = new QPushButton("Hello, World!", this);
         //setCentralWidget(button);
-
+        QWidget *centralWidget = new QWidget(this);
         // Create a menu bar
         QMenuBar *menuBar = this->menuBar();
 
@@ -33,12 +34,26 @@ class MainWindow : public QMainWindow {
         statusBar()->showMessage("Ready");
 
         // Create the list of usb devices for the user to select from
-        std::vector<std::string> deviceList = grabUsbDevices();
-        std::vector<QPushButton> deviceButtonList;
-        for (int i = 0; i < deviceList.size(); i++) {
-            deviceButtonList.push_back(QPushButton("deviceList[i]", this));
-            
+        QVBoxLayout *layout = new QVBoxLayout(centralWidget);
+        QVector<QPushButton*> buttonVector;
+        QStringList usbDevices = {"Device_1", "Device_2", "Device_3"};
+        for (const QString &device : usbDevices) {
+            QPushButton *button = new QPushButton(device, this);
+            // Connect button clicked signal to a lambda or slot
+            connect(button, &QPushButton::clicked, [this, device]() {
+                qDebug() << "Button for " << device << " clicked.";
+            });
+            buttonVector.append(button);
         }
+        // Add buttons from vector to layout
+        for (QPushButton *button : buttonVector) {
+            layout->addWidget(button);
+        }
+
+    
+        centralWidget->setLayout(layout);
+        setCentralWidget(centralWidget);
+        
     }
 
     private:
