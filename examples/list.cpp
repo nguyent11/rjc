@@ -1,9 +1,8 @@
-//#include <iostream>
 #include <stdio.h>
 #include <libusb-1.0/libusb.h>
 
 int main(int argc, char* argv[]) {
-    libusb_device **devices;
+    libusb_device **devices;	// List of devices
     libusb_context *ctx = NULL;
     ssize_t count;
     int ret;
@@ -37,10 +36,10 @@ int main(int argc, char* argv[]) {
             continue;
         }
 
-        printf("Device %zd: Vendor ID: 0x%04x, Product ID: 0x%04x, Bus %03d, Device %03d\n",
+        printf("Device %zd: Vendor ID: 0x%04x, Product ID: 0x%04x, Bus %03d, Device %03d, USB-IF class code: %03d, USB-IF sub-class code: %03d\n",
                i, desc.idVendor, desc.idProduct,
                libusb_get_bus_number(device),
-               libusb_get_device_address(device));
+               libusb_get_device_address(device), desc.bDeviceClass, desc.bDeviceSubClass);
     }
 
     // Free the list, unref devices
