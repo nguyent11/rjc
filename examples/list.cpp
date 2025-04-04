@@ -1,3 +1,15 @@
+/**************************************************************************************************
+ * Example that creates a list of usb devices and accesses information held in the device
+ * descriptors. Uses the libusb library.
+ *
+ * Dependency:
+ * 	libusb 1.0.25: Install with 'apt-get install libusb-1.0-dev'
+ *
+ * To run:
+ * 	g++ list.cpp -lusb-1.0
+ *************************************************************************************************/
+ 
+
 #include <stdio.h>
 #include <libusb-1.0/libusb.h>
 
