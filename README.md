@@ -11,10 +11,15 @@ USB video application. Currently developed for senior capstone project. The goal
 | OpenGL         | libgl1-mesa-dev    |
 
 ## Instructions
-```
-> qmake6
-> make
-```
+To build from source, we recommend using Qt's build system, qmake, and make.
+* To generate a Makefile (only need to run once):
+  ```
+  > qmake6
+  ```
+* To compile:
+  ```
+  > make
+  ```
 
 ## Platform
 This program is currently being developed on Ubuntu 22.04 for ARM64 and x86-64.
