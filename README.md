@@ -3,10 +3,12 @@ USB video application. Currently developed for senior capstone project. The goal
 
 ## Dependencies
 (Note: Not a complete SBOM. These are only what I had to install.)
-* qt6-base-dev
-* qt6-multimedia-dev
-* libopencv-dev
-* libgl1-mesa-dev
+| Library        | Implementation     |
+| -------------- | ------------------ |
+| Qt6 Base       | qt6-base-dev       |
+| Qt6 Multimedia | qt6-multimedia-dev |
+| OpenCV C++     | libopencv-dev      |
+| OpenGL         | libgl1-mesa-dev    |
 
 ## Instructions
 ```
