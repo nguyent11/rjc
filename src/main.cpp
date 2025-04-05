@@ -8,6 +8,8 @@
 #include <QVBoxLayout>
 #include <QDebug>
 #include <QString>
+#include <QCamera>
+#include <QMediaDevices>
 
 // Processing includes
 
@@ -20,10 +22,6 @@ class MainWindow : public QMainWindow {
         // Set the initial window size
         // resize(800, 600);
 
-        // Create a central widget (optional, can use for main content)
-        //QPushButton *button = new QPushButton("Hello, World!", this);
-        //setCentralWidget(button);
-        QWidget *centralWidget = new QWidget(this);
         // Create a menu bar
         QMenuBar *menuBar = this->menuBar();
 
@@ -39,8 +37,7 @@ class MainWindow : public QMainWindow {
 	    // Message at bottom of screen
         statusBar()->showMessage("Status: Init");
 
-        
-
+        //updateCameraMenu(cameraMenu);
     }
 
     void setStatus(QString statusmsg) {
@@ -56,11 +53,33 @@ class MainWindow : public QMainWindow {
         fileMenu->addAction(recordAction);
 
         // Camera menu actions
-        QStringList devices = {"Device_1", "Device_2", "Device_3"};
+        /*QStringList devices = {"Device_1", "Device_2", "Device_3"};
         for (int i = 0; i < devices.length(); i++) {
             QAction *cameraAction = new QAction(devices[i], this);
             cameraMenu->addAction(cameraAction);
+        }*/
+        updateCameraMenu(cameraMenu);        
+
+        return;
+    }
+    
+    void updateCameraMenu(QMenu* cameraMenu) {
+        const QList<QCameraDevice> cameras = QMediaDevices::videoInputs();
+        //cameraMenu->clear();        
+    
+        for (const QCameraDevice &camera : cameras) {
+            QString name = camera.description();
+            QAction *cameraAction = new QAction(name, this);
+
+            /*connect(action, &QAction::triggered, this, [name]() {
+                qDebug() << "Selected camera:" << name;
+                // You can create a QCamera object with `camera` here
+            });*/
+
+            cameraMenu->addAction(cameraAction);
         }
+
+        return;
     }
 };
 
