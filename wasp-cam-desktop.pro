@@ -10,6 +10,7 @@ QMAKE_CC = gcc
 
 QT = core gui
 QT += widgets
+QT += multimedia
 
 INCLUDEPATH += .
 
