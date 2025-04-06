@@ -1,4 +1,5 @@
-// GUI includes
+// This file contains function main() and an implementation of the MainWindow class.
+
 #include <QApplication>
 #include <QPushButton>
 #include <QMainWindow>
@@ -11,9 +12,9 @@
 #include <QCamera>
 #include <QMediaDevices>
 
-// Processing includes
-
 class MainWindow : public QMainWindow {
+    Q_OBJECT
+
     public:
     MainWindow() {
         // Set up window, menu, status
@@ -25,18 +26,23 @@ class MainWindow : public QMainWindow {
     }
 
     private:
+    // Private variables
+    QMenuBar *mainMenu;
+    QMenu *fileMenu;
+    QMenu *cameraMenu;
+
     void init() {
         setWindowTitle("Monitor");
 
-        QMenuBar *menuBar = this->menuBar();
-        QMenu *fileMenu = menuBar->addMenu(tr("File"));
-        QMenu *cameraMenu = menuBar->addMenu(tr("Camera"));
-        createMenuActions(fileMenu, cameraMenu);
+        mainMenu = this->menuBar();
+        fileMenu = mainMenu->addMenu(tr("File"));
+        cameraMenu = mainMenu->addMenu(tr("Camera"));
+        createMenuActions();
 
-        statusBar()->showMessage(tr("Status: Initialized"));
+        statusBar()->showMessage("Status: Initialized");
     }
 
-    void createMenuActions(QMenu* fileMenu, QMenu* cameraMenu) {
+    void createMenuActions() {
         // File menu actions
         QAction *recordAction = new QAction("Record to File", this);
         //recordAction->setShortcut(QKeySequence::SaveAs);
@@ -44,15 +50,17 @@ class MainWindow : public QMainWindow {
         fileMenu->addAction(recordAction);
 
         // Camera menu actions
-        updateCameraMenu(cameraMenu);        
+        updateCameraMenu();        
 
         return;
     }
     
-    void updateCameraMenu(QMenu* cameraMenu) {
+    void updateCameraMenu() {
+        qDebug() << "at function updateCameraMenu()\n";        
+
         const QList<QCameraDevice> cameras = QMediaDevices::videoInputs();
-        cameraMenu->clear();        
-    
+        cameraMenu->clear();                
+
         for (const QCameraDevice &camera : cameras) {
             QString name = camera.description();
             QAction *cameraAction = new QAction(name, this);
@@ -66,12 +74,14 @@ class MainWindow : public QMainWindow {
         }
 
         QAction *refreshCameraAction = new QAction("Refresh Device List", this);
+        connect(refreshCameraAction, &QAction::triggered, this, &MainWindow::updateCameraMenu);
         cameraMenu->addAction(refreshCameraAction);
 
         return;
     }
 };
 
+#include "main.moc"
 
 int main(int argc, char** argv) {
     QApplication app(argc, argv);
