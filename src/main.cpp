@@ -16,28 +16,8 @@
 class MainWindow : public QMainWindow {
     public:
     MainWindow() {
-        // Set the window title
-        setWindowTitle("");
-
-        // Set the initial window size
-        // resize(800, 600);
-
-        // Create a menu bar
-        QMenuBar *menuBar = this->menuBar();
-
-        // Create the "File" menu. Used to record and save to file.
-        QMenu *fileMenu = menuBar->addMenu("File");
-	
-
-    	// Create "Camera" menu. Used to select camera
-	    QMenu *cameraMenu = menuBar->addMenu("Camera");
-
-        createMenuActions(fileMenu, cameraMenu);
-
-	    // Message at bottom of screen
-        statusBar()->showMessage("Status: Init");
-
-        //updateCameraMenu(cameraMenu);
+        // Set up window, menu, status
+        init();
     }
 
     void setStatus(QString statusmsg) {
@@ -45,19 +25,25 @@ class MainWindow : public QMainWindow {
     }
 
     private:
+    void init() {
+        setWindowTitle("Monitor");
+
+        QMenuBar *menuBar = this->menuBar();
+        QMenu *fileMenu = menuBar->addMenu(tr("File"));
+        QMenu *cameraMenu = menuBar->addMenu(tr("Camera"));
+        createMenuActions(fileMenu, cameraMenu);
+
+        statusBar()->showMessage(tr("Status: Initialized"));
+    }
+
     void createMenuActions(QMenu* fileMenu, QMenu* cameraMenu) {
         // File menu actions
-        QAction *recordAction = new QAction(tr("&Record to File"), this);
+        QAction *recordAction = new QAction("Record to File", this);
         //recordAction->setShortcut(QKeySequence::SaveAs);
         //connect(recordAction, &QAction::triggered, this, &MainWindow::saveAs);
         fileMenu->addAction(recordAction);
 
         // Camera menu actions
-        /*QStringList devices = {"Device_1", "Device_2", "Device_3"};
-        for (int i = 0; i < devices.length(); i++) {
-            QAction *cameraAction = new QAction(devices[i], this);
-            cameraMenu->addAction(cameraAction);
-        }*/
         updateCameraMenu(cameraMenu);        
 
         return;
@@ -65,7 +51,7 @@ class MainWindow : public QMainWindow {
     
     void updateCameraMenu(QMenu* cameraMenu) {
         const QList<QCameraDevice> cameras = QMediaDevices::videoInputs();
-        //cameraMenu->clear();        
+        cameraMenu->clear();        
     
         for (const QCameraDevice &camera : cameras) {
             QString name = camera.description();
@@ -79,6 +65,9 @@ class MainWindow : public QMainWindow {
             cameraMenu->addAction(cameraAction);
         }
 
+        QAction *refreshCameraAction = new QAction("Refresh Device List", this);
+        cameraMenu->addAction(refreshCameraAction);
+
         return;
     }
 };
@@ -87,18 +76,9 @@ class MainWindow : public QMainWindow {
 int main(int argc, char** argv) {
     QApplication app(argc, argv);
 
-    //QPushButton button ("Hello world!");
-    //button.show();
-
     MainWindow mainWindow;
     mainWindow.showMaximized();
     mainWindow.show();
-
-   // QPushButton button("Hello world!", &mainWindow);
-   // button.show();
-
-
-    mainWindow.setStatus(QString("Status: Ready"));
 
     return app.exec();
 }
