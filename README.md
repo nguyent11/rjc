@@ -1,4 +1,4 @@
-# Monitor
+# RJCamera (rjc)
 USB video application. Currently developed for senior capstone project. The goal is to have a camera application that uses OpenCV to process images before displaying to the user.
 
 ## Dependencies
