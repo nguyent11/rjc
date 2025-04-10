@@ -12,6 +12,8 @@
 #include <QCamera>
 #include <QMediaDevices>
 
+#include "videoprocessor.hpp"
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -62,13 +64,12 @@ class MainWindow : public QMainWindow {
         cameraMenu->clear();                
 
         for (const QCameraDevice &camera : cameras) {
-            QString name = camera.description();
-            QAction *cameraAction = new QAction(name, this);
+            QAction *cameraAction = new QAction(camera.description(), this);
 
-            /*connect(action, &QAction::triggered, this, [name]() {
-                qDebug() << "Selected camera:" << name;
-                // You can create a QCamera object with `camera` here
-            });*/
+            connect(cameraAction, &QAction::triggered, this, [this, camera]() {
+                //qDebug() << "Selected camera:" << camera.description();
+                startCamera(camera); 
+            });
 
             cameraMenu->addAction(cameraAction);
         }
@@ -78,6 +79,13 @@ class MainWindow : public QMainWindow {
         cameraMenu->addAction(refreshCameraAction);
 
         return;
+    }
+
+    void startCamera(const QCameraDevice &camera) {
+        QString basePath = "/dev/bus/usb/";
+        qDebug() << "Attempting to access" << camera.description() << "at" << basePath;
+
+
     }
 };
 

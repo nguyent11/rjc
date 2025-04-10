@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = monitor
+TARGET = rjc
 
 QMAKE_CXX = g++
 QMAKE_CC = gcc
