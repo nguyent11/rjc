@@ -11,6 +11,7 @@ QMAKE_CC = gcc
 QT = core gui
 QT += widgets
 QT += multimedia
+QT += multimediawidgets
 
 CONFIG += c++17
 CONFIG += link_pkgconfig

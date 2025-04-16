@@ -11,8 +11,12 @@
 #include <QString>
 #include <QCamera>
 #include <QMediaDevices>
+#include <QMediaCaptureSession>
+#include <QVideoWidget>
+#include <QCameraDevice>
+#include <QTimer>
 
-#include "videoprocessor.hpp"
+//#include "videoprocessor.hpp"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -32,14 +36,21 @@ class MainWindow : public QMainWindow {
     QMenuBar *mainMenu;
     QMenu *fileMenu;
     QMenu *cameraMenu;
+    QCamera *camera;
+    QMediaCaptureSession captureSession;
+    QVideoWidget *videoWidget;
 
     void init() {
-        setWindowTitle("Monitor");
+        setWindowTitle("RJC");
 
         mainMenu = this->menuBar();
         fileMenu = mainMenu->addMenu(tr("File"));
         cameraMenu = mainMenu->addMenu(tr("Camera"));
         createMenuActions();
+
+        camera = NULL;
+        videoWidget = new QVideoWidget(this);
+        setCentralWidget(videoWidget);
 
         statusBar()->showMessage("Status: Initialized");
     }
@@ -63,12 +74,12 @@ class MainWindow : public QMainWindow {
         const QList<QCameraDevice> cameras = QMediaDevices::videoInputs();
         cameraMenu->clear();                
 
-        for (const QCameraDevice &camera : cameras) {
-            QAction *cameraAction = new QAction(camera.description(), this);
+        for (const QCameraDevice &cam : cameras) {
+            QAction *cameraAction = new QAction(cam.description(), this);
 
-            connect(cameraAction, &QAction::triggered, this, [this, camera]() {
+            connect(cameraAction, &QAction::triggered, this, [this, cam]() {
                 //qDebug() << "Selected camera:" << camera.description();
-                startCamera(camera); 
+                startCamera(cam); 
             });
 
             cameraMenu->addAction(cameraAction);
@@ -81,11 +92,25 @@ class MainWindow : public QMainWindow {
         return;
     }
 
-    void startCamera(const QCameraDevice &camera) {
+    void startCamera(const QCameraDevice &camDev) {
+        if (camera != NULL) {
+            camera->stop();
+            camera->deleteLater();
+        }
+
         QString basePath = "/dev/bus/usb/";
-        qDebug() << "Attempting to access" << camera.description() << "at" << basePath;
+        qDebug() << "Attempting to access" << camDev.description() << "at" << basePath;
 
+        camera = new QCamera(camDev, this);
+        captureSession.setCamera(camera);
+        captureSession.setVideoOutput(videoWidget);
 
+        QTimer::singleShot(100, this, [this]() {
+            camera->start();
+            setStatus("Camera started.");
+        });
+
+        //camera->start();
     }
 };
 
