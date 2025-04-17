@@ -2,7 +2,7 @@
 USB video application. Currently developed for senior capstone project. The goal is to have a camera application that uses OpenCV to process images before displaying to the user.
 
 ## Dependencies
-(Note: Not a complete SBOM. These are only what I had to install.)
+(Note: Not a complete SBOM. These are only what I had to install based on a clean install of Ubuntu 22.04 Server.)
 | Library        | Implementation     |
 | -------------- | ------------------ |
 | Qt6 Base       | qt6-base-dev       |
