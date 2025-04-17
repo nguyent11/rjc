@@ -11,6 +11,7 @@ USB video application. Currently developed for senior capstone project. The goal
 | OpenGL         | libgl1-mesa-dev    |
 
 ## Instructions
+### Build from source
 To build from source, we recommend using Qt's build system, qmake, and make.
 * To generate a Makefile (only need to run once):
   ```
@@ -24,6 +25,11 @@ To build from source, we recommend using Qt's build system, qmake, and make.
 For simplicity, a runfile is provided.
 ```
 bash run.sh
+```
+
+A script is provided to set up the environment with some of the required packages.
+```
+bash configure.sh
 ```
 
 ## Platform
