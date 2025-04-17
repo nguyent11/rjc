@@ -96,6 +96,7 @@ class MainWindow : public QMainWindow {
         if (camera != NULL) {
             camera->stop();
             camera->deleteLater();
+            camera = NULL;
         }
 
         QString basePath = "/dev/bus/usb/";
@@ -103,6 +104,11 @@ class MainWindow : public QMainWindow {
 
         camera = new QCamera(camDev, this);
         captureSession.setCamera(camera);
+
+        if (!videoWidget) {
+            qWarning() << "Video widget not initialized!";
+            return;
+        }
         captureSession.setVideoOutput(videoWidget);
 
         QTimer::singleShot(100, this, [this]() {
