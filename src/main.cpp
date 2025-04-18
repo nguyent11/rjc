@@ -41,10 +41,10 @@ class MainWindow : public QMainWindow {
     QVideoWidget *videoWidget;
 
     void init() {
-        setWindowTitle("RJC");
+        setWindowTitle("RJCamera");
 
         mainMenu = this->menuBar();
-        fileMenu = mainMenu->addMenu(tr("File"));
+        fileMenu = mainMenu->addMenu(tr("Record"));
         cameraMenu = mainMenu->addMenu(tr("Camera"));
         createMenuActions();
 
