@@ -100,7 +100,7 @@ class MainWindow : public QMainWindow {
         }
 
         QString basePath = "/dev/bus/usb/";
-        qDebug() << "Attempting to access" << camDev.description() << "at" << basePath;
+        qDebug() << "Attempting to access" << camDev.description() << "at" << basePath;        
 
         camera = new QCamera(camDev, this);
         captureSession.setCamera(camera);
@@ -111,12 +111,15 @@ class MainWindow : public QMainWindow {
         }
         captureSession.setVideoOutput(videoWidget);
 
-        QTimer::singleShot(100, this, [this]() {
+        /*QTimer::singleShot(100, this, [this]() {
             camera->start();
             setStatus("Camera started.");
-        });
+        });*/
 
-        //camera->start();
+        QString status = "Accessing " + camDev.description() + "\n";
+        setStatus(status);
+
+        camera->start();
     }
 };
 
