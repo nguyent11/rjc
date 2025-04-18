@@ -15,8 +15,8 @@ USB video application. Currently developed for senior capstone project. The goal
 ### macOS
 | Library     | Implementation     |
 | ----------- | ------------------ |
-| Qt6         | qt6-base-dev       |
-| OpenCV C++  | libopencv-dev      |
+| Qt6         | qt                 |
+| OpenCV C++  | opencv             |
 | OpenGL      | mesa-glu           |
 
 ## Instructions
