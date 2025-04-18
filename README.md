@@ -23,13 +23,13 @@ USB video application. Currently developed for senior capstone project. The goal
 ### Build from source
 To build from source, we recommend using Qt's build system, qmake, and make.
 * To generate a Makefile (only need to run once):
-  ```
-  qmake6
-  ```
+    ```
+    qmake6
+    ```
 * To compile:
-  ```
-  make
-  ```
+    ```
+    make
+    ```
 
 For simplicity, a runfile is provided.
 ```
@@ -40,6 +40,16 @@ A script is provided to set up the environment with some of the required package
 ```
 bash configure.sh
 ```
+
+### Running
+* Linux
+    ```
+    ./rjc
+    ```
+* macOS
+    ```
+    open -n ./rjc.app
+    ```
 
 ## Platform
 This program is currently being developed on Ubuntu 22.04 for ARM64 and x86-64 and macOS ARM64.
