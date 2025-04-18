@@ -3,12 +3,21 @@ USB video application. Currently developed for senior capstone project. The goal
 
 ## Dependencies
 (Note: Not a complete SBOM. These are only what I had to install based on a clean install of Ubuntu 22.04 Server.)
+
+### Linux
 | Library        | Implementation     |
 | -------------- | ------------------ |
 | Qt6 Base       | qt6-base-dev       |
 | Qt6 Multimedia | qt6-multimedia-dev |
 | OpenCV C++     | libopencv-dev      |
 | OpenGL         | libgl1-mesa-dev    |
+
+### macOS
+| Library     | Implementation     |
+| ----------- | ------------------ |
+| Qt6         | qt6-base-dev       |
+| OpenCV C++  | libopencv-dev      |
+| OpenGL      | mesa-glu           |
 
 ## Instructions
 ### Build from source
@@ -27,7 +36,7 @@ For simplicity, a runfile is provided.
 bash run.sh
 ```
 
-A script is provided to set up the environment with some of the required packages.
+A script is provided to set up the environment with some of the required packages on Linux systems using apt-get.
 ```
 bash configure.sh
 ```
