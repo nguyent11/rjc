@@ -15,13 +15,14 @@
 #include <QVideoWidget>
 #include <QCameraDevice>
 #include <QTimer>
+#include <QLabel>
 
-//#include "videoprocessor.hpp"
+#include "videoprocessor.hpp"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
-    public:
+public:
     MainWindow() {
         // Set up window, menu, status
         init();
@@ -31,14 +32,14 @@ class MainWindow : public QMainWindow {
         this->statusBar()->showMessage(statusmsg);
     }
 
-    private:
+private:
     // Private variables
     QMenuBar *mainMenu;
     QMenu *fileMenu;
     QMenu *cameraMenu;
-    QCamera *camera;
-    QMediaCaptureSession captureSession;
-    QVideoWidget *videoWidget;
+    
+    QLabel *videoDisplay;
+    VideoProcessor *vidProc;
 
     void init() {
         setWindowTitle("RJCamera");
@@ -48,11 +49,16 @@ class MainWindow : public QMainWindow {
         cameraMenu = mainMenu->addMenu(tr("Camera"));
         createMenuActions();
 
-        camera = NULL;
-        videoWidget = new QVideoWidget(this);
-        setCentralWidget(videoWidget);
-
         statusBar()->showMessage("Status: Initialized");
+
+        videoDisplay = new QLabel("Waiting for camera...");
+        videoDisplay->setAlignment(Qt::AlignCenter);
+        videoDisplay->setMinimumSize(640, 480);
+
+        auto *centralWidget = new QWidget(this);
+        auto *layout = new QVBoxLayout(centralWidget);
+        layout->addWidget(videoDisplay);
+        setCentralWidget(centralWidget);
     }
 
     void createMenuActions() {
@@ -93,33 +99,25 @@ class MainWindow : public QMainWindow {
     }
 
     void startCamera(const QCameraDevice &camDev) {
-        if (camera != NULL) {
-            camera->stop();
-            camera->deleteLater();
-            camera = NULL;
-        }
+        qDebug() << "At startCamera() in class Mainwindow";
+        
+        /*if (vidProc != NULL) {
+            vidProc->stop();
+            delete vidProc;
+            vidProc = NULL;
+        }*/
 
-        QString basePath = "/dev/bus/usb/";
-        qDebug() << "Attempting to access" << camDev.description() << "at" << basePath;        
-
-        camera = new QCamera(camDev, this);
-        captureSession.setCamera(camera);
-
-        if (!videoWidget) {
-            qWarning() << "Video widget not initialized!";
-            return;
-        }
-        captureSession.setVideoOutput(videoWidget);
-
-        /*QTimer::singleShot(100, this, [this]() {
-            camera->start();
-            setStatus("Camera started.");
-        });*/
-
+        qDebug() << "Attempting to access" << camDev.description();        
         QString status = "Accessing " + camDev.description() + "\n";
         setStatus(status);
 
-        camera->start();
+        vidProc = new VideoProcessor(camDev, this);
+        connect(vidProc, &VideoProcessor::frameReady, this, [=](const QImage &img) {
+            videoDisplay->setPixmap(QPixmap::fromImage(img).scaled(
+            videoDisplay->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        });
+
+        setStatus("Camera started: " + camDev.description());
     }
 };
 
