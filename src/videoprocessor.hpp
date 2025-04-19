@@ -7,6 +7,8 @@
 #include <QVideoFrame>
 #include <QImage>
 
+#include <opencv2/opencv.hpp>
+
 class VideoProcessor : public QObject{
     Q_OBJECT
 
@@ -22,6 +24,9 @@ private:
     QMediaCaptureSession videoCap;
     QVideoSink *videoSink;
 
-    void handleFrame(const QVideoFrame &frame);
-};
+    cv::Mat emblemOverlay;
 
+    void handleFrame(const QVideoFrame &frame);
+    cv::Mat qimageToMat(const QImage &image);
+    void addOverlay(cv::Mat &base, const cv::Mat &overlay);
+};

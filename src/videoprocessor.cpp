@@ -9,6 +9,8 @@ VideoProcessor::VideoProcessor(const QCameraDevice &cameraDevice, QObject *paren
 
     qDebug() << "Creating video processor object.";
 
+    emblemOverlay = cv::imread("./resources/verminator_emblem.png", cv::IMREAD_UNCHANGED);
+
     qDebug() << "Creating capture session.";    
     videoCap.setCamera(camera);
     videoCap.setVideoOutput(videoSink);
@@ -31,7 +33,46 @@ void VideoProcessor::handleFrame(const QVideoFrame &frame) {
         return;
     }
 
-    emit frameReady(image);
+    QImage qimg = frame.toImage().convertToFormat(QImage::Format_RGBA8888);
+    cv::Mat baseFrame = qimageToMat(qimg);
+
+    cv::Mat greyFrame;
+    cv::cvtColor(baseFrame, greyFrame, cv::COLOR_RGBA2GRAY);
+    cv::cvtColor(greyFrame, baseFrame, cv::COLOR_GRAY2RGBA);
+    
+    // Emblem is a watermark, so make it small and in the corner.
+    cv::Mat resizedOverlay;
+    cv::resize(emblemOverlay, resizedOverlay, cv::Size(100, 100));
+    int x = baseFrame.cols - resizedOverlay.cols - 10;
+    int y = baseFrame.rows - resizedOverlay.rows - 10;
+
+    if (x >= 0 && y >= 0) {
+        cv::Rect roi(x, y, resizedOverlay.cols, resizedOverlay.rows);
+        cv::Mat targetROI = baseFrame(roi);
+        addOverlay(targetROI, resizedOverlay);
+    }
+
+    //addOverlay(baseFrame, emblemOverlay);
+
+    QImage processed((uchar*)baseFrame.data, baseFrame.cols, baseFrame.rows, baseFrame.step, QImage::Format_RGBA8888);
+
+    emit frameReady(processed.copy());
+}
+
+void VideoProcessor::addOverlay(cv::Mat &baseFrame, const cv::Mat &overlay) {
+    for (int y = 0; y < overlay.rows; ++y) {
+        for (int x = 0; x < overlay.cols; ++x) {
+            const cv::Vec4b &pixel = overlay.at<cv::Vec4b>(y, x);
+            uchar alpha = pixel[3];
+            if (alpha > 0) {
+                for (int c = 0; c < 3; ++c) {
+                    baseFrame.at<cv::Vec4b>(y, x)[c] =
+                        (alpha * pixel[c] + (255 - alpha) * baseFrame.at<cv::Vec4b>(y, x)[c]) / 255;
+                }
+            }
+        }
+    }    
+
 }
 
 void VideoProcessor::stop() {
@@ -40,3 +81,7 @@ void VideoProcessor::stop() {
     }
 }
 
+cv::Mat VideoProcessor::qimageToMat(const QImage &image) {
+    return cv::Mat(image.height(), image.width(), CV_8UC4,
+        const_cast<uchar*>(image.bits()), image.bytesPerLine()).clone();
+}
