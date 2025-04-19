@@ -14,6 +14,11 @@ VideoProcessor::VideoProcessor(const QCameraDevice &cameraDevice, QObject *paren
     emblemOverlay = cv::imread("./resources/verminator_emblem.png", cv::IMREAD_UNCHANGED);
     cv::cvtColor(emblemOverlay, emblemOverlay, cv::COLOR_BGRA2RGBA);
 
+    // Read the file containing the overlay for crosshair.
+    // Ensure the imagage data is in RGBA format.
+    crosshairOverlay = cv::imread("./resources/crosshair119.png", cv::IMREAD_UNCHANGED);
+    cv::cvtColor(crosshairOverlay, crosshairOverlay, cv::COLOR_BGRA2RGBA);
+
     qDebug() << "Creating capture session.";    
     videoCap.setCamera(camera);
     videoCap.setVideoOutput(videoSink);
@@ -48,11 +53,18 @@ void VideoProcessor::handleFrame(const QVideoFrame &frame) {
     cv::resize(emblemOverlay, resizedOverlay, cv::Size(100, 100));
     int x = baseFrame.cols - resizedOverlay.cols - 10;
     int y = baseFrame.rows - resizedOverlay.rows - 10;
-
     if (x >= 0 && y >= 0) {
         cv::Rect roi(x, y, resizedOverlay.cols, resizedOverlay.rows);
         cv::Mat targetROI = baseFrame(roi);
         addOverlay(targetROI, resizedOverlay);
+    }
+    
+    x = (baseFrame.cols - crosshairOverlay.cols) / 2;
+    y = (baseFrame.rows - crosshairOverlay.rows) / 2;
+    if (x >= 0 && y >- 0) {
+        cv::Rect roi(x, y, crosshairOverlay.cols, crosshairOverlay.rows);
+        cv::Mat targetROI = baseFrame(roi);
+        addOverlay(targetROI, crosshairOverlay);
     }
 
     //addOverlay(baseFrame, emblemOverlay);

@@ -25,6 +25,7 @@ private:
     QVideoSink *videoSink;
 
     cv::Mat emblemOverlay;
+    cv::Mat crosshairOverlay;
 
     void handleFrame(const QVideoFrame &frame);
     cv::Mat qimageToMat(const QImage &image);
