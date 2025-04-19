@@ -9,7 +9,10 @@ VideoProcessor::VideoProcessor(const QCameraDevice &cameraDevice, QObject *paren
 
     qDebug() << "Creating video processor object.";
 
+    // Read the file containing the overlay for emblems.
+    // Ensure that the image data is in the correct color format of RGBA.
     emblemOverlay = cv::imread("./resources/verminator_emblem.png", cv::IMREAD_UNCHANGED);
+    cv::cvtColor(emblemOverlay, emblemOverlay, cv::COLOR_BGRA2RGBA);
 
     qDebug() << "Creating capture session.";    
     videoCap.setCamera(camera);
@@ -36,9 +39,9 @@ void VideoProcessor::handleFrame(const QVideoFrame &frame) {
     QImage qimg = frame.toImage().convertToFormat(QImage::Format_RGBA8888);
     cv::Mat baseFrame = qimageToMat(qimg);
 
-    cv::Mat greyFrame;
-    cv::cvtColor(baseFrame, greyFrame, cv::COLOR_RGBA2GRAY);
-    cv::cvtColor(greyFrame, baseFrame, cv::COLOR_GRAY2RGBA);
+    //cv::Mat greyFrame;
+    //cv::cvtColor(baseFrame, greyFrame, cv::COLOR_RGBA2GRAY);
+    //cv::cvtColor(greyFrame, baseFrame, cv::COLOR_GRAY2RGBA);
     
     // Emblem is a watermark, so make it small and in the corner.
     cv::Mat resizedOverlay;
