@@ -16,8 +16,9 @@ VideoProcessor::VideoProcessor(const QCameraDevice &cameraDevice, QObject *paren
 
     // Read the file containing the overlay for crosshair.
     // Ensure the imagage data is in RGBA format.
-    crosshairOverlay = cv::imread("./resources/crosshair119.png", cv::IMREAD_UNCHANGED);
+    crosshairOverlay = cv::imread("./resources/crosshairgreen.png", cv::IMREAD_UNCHANGED);
     cv::cvtColor(crosshairOverlay, crosshairOverlay, cv::COLOR_BGRA2RGBA);
+    cv::resize(crosshairOverlay, crosshairOverlay, cv::Size(64, 64));	
 
     qDebug() << "Creating capture session.";    
     videoCap.setCamera(camera);
