@@ -41,4 +41,4 @@ bash configure.sh
     ```
 
 ## Platform
-This program is currently being developed on Ubuntu 22.04 for ARM64 and x86-64 and macOS ARM64.
+This program is currently being developed on Ubuntu 22.04 for ARM64 and x86-64.
