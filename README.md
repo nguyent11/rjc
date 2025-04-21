@@ -12,13 +12,6 @@ USB video application. Currently developed for senior capstone project. The goal
 | OpenCV C++     | libopencv-dev      |
 | OpenGL         | libgl1-mesa-dev    |
 
-### macOS
-| Library     | Implementation     |
-| ----------- | ------------------ |
-| Qt6         | qt                 |
-| OpenCV C++  | opencv             |
-| OpenGL      | mesa-glu           |
-
 ## Instructions
 ### Build from source
 To build from source, we recommend using Qt's build system, qmake, and make.
@@ -45,10 +38,6 @@ bash configure.sh
 * Linux
     ```
     ./rjc
-    ```
-* macOS
-    ```
-    open -n ./rjc.app
     ```
 
 ## Platform
