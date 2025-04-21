@@ -61,7 +61,7 @@ void VideoProcessor::handleFrame(const QVideoFrame &frame) {
     }
     
     x = (baseFrame.cols - crosshairOverlay.cols) / 2;
-    y = (baseFrame.rows - crosshairOverlay.rows) / 2;
+    y = (baseFrame.rows - crosshairOverlay.rows) / 2 + 128;
     if (x >= 0 && y >- 0) {
         cv::Rect roi(x, y, crosshairOverlay.cols, crosshairOverlay.rows);
         cv::Mat targetROI = baseFrame(roi);
